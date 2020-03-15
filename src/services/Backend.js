@@ -18,10 +18,10 @@ function handleRequestError(data) {
 
     setTimeout(() => {
       if (!state.isConnected) {
-        errorMessage(strings.noInternetConnection);
+        errorMessage('لا يوجد إتصال بالإنترنت');
       } else {
         if (!data) {
-          errorMessage(strings.anErrorOccured);
+          errorMessage('حدث خطأ');
         }
       }
     });
