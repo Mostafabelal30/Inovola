@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, StatusBar} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
@@ -16,7 +16,7 @@ import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 
 const customTextProps = {
   style: {
-    fontFamily: 'Cairo-Bold',
+    fontFamily: 'Cairo-SemiBold',
   },
 };
 setCustomText(customTextProps);
@@ -26,6 +26,7 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <View style={{flex: 1}}>
+          <StatusBar hidden />
           <Router />
           <FlashMessage position="bottom" duration={5000} />
         </View>

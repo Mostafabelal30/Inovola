@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {getTraining} from '../action';
 import {
@@ -17,10 +9,12 @@ import {
   scale,
 } from '../utils/device-scaling';
 import Container from '../components/Container';
+import Spinner from '../components/Spinner';
 import Button from '../components/Button';
-import strings from '../strings';
 import Swiper from 'react-native-swiper';
 import FastImage from 'react-native-fast-image';
+import moment from 'moment';
+require('moment/locale/ar-sa');
 
 class Training extends Component {
   constructor(props) {
@@ -57,6 +51,8 @@ class Training extends Component {
       descriptionTextStyle,
       titleTextStyle,
       trainerNameTextStyle,
+      bookingTextStyle,
+      priceTextStyle,
     } = styles;
 
     const {trainingData} = this.props;
@@ -111,12 +107,16 @@ class Training extends Component {
               showsVerticalScrollIndicator={false}
               contentContainerStyle={containerViewStyle}>
               <Text style={interestViewStyle}>
-                {'#' + trainingData.interest}
+                {'# ' + trainingData.interest}
               </Text>
               <Text style={titleTextStyle}>{trainingData.title}</Text>
 
               <View style={rowDateView}>
-                <Text style={dateTextStyle}>{trainingData.date}</Text>
+                <Text style={dateTextStyle}>
+                  {moment(trainingData.date, 'YYYY-MM-DD HH:mm:ss').format(
+                    'dddd , DD MMMM,hh:mm a',
+                  )}
+                </Text>
                 <Image
                   style={dateImageStyle}
                   source={require('../assets/icons/Date.png')}
@@ -135,27 +135,45 @@ class Training extends Component {
               <View style={sepratorStyle} />
 
               <View style={rowDateView}>
-                <Text style={trainerNameTextStyle}>{trainingData.trainerName}</Text>
+                <Text style={trainerNameTextStyle}>
+                  {trainingData.trainerName}
+                </Text>
                 <Image
                   style={trainerImageStyle}
                   source={require('../assets/icons/Ellipse.png')}
                   resizeMode={'contain'}
                 />
               </View>
-              <Text style={descriptionTextStyle}>{trainingData.trainerInfo}</Text>
+              <Text style={descriptionTextStyle}>
+                {trainingData.trainerInfo}
+              </Text>
               <View style={sepratorStyle} />
 
               <Text style={trainerNameTextStyle}>عن الدورة</Text>
               <Text style={descriptionTextStyle}>
                 {trainingData.occasionDetail}
               </Text>
+              <View style={sepratorStyle} />
+              <Text style={trainerNameTextStyle}> تكلفة الدورة</Text>
+              <View style={rowDateView}>
+                <Text style={priceTextStyle}>SAR 40</Text>
+                <Text style={bookingTextStyle}>الحجز العادي</Text>
+              </View>
+              <View style={rowDateView}>
+                <Text style={priceTextStyle}>SAR 80</Text>
+                <Text style={bookingTextStyle}>الحجز المميز</Text>
+              </View>
+              <View style={rowDateView}>
+                <Text style={priceTextStyle}>SAR 120</Text>
+                <Text style={bookingTextStyle}>الحجز السريع</Text>
+              </View>
             </ScrollView>
             <View style={buttonViewStyle}>
-              <Button style={buttonStyle} text={strings.bookingNow} />
+              <Button style={buttonStyle} text={'قم بالحجز الآن'} />
             </View>
           </Container>
         ) : (
-          <Text style={dateTextStyle}>'قم بالحجز الآن'</Text>
+          <Spinner />
         )}
       </Container>
     );
@@ -164,7 +182,6 @@ class Training extends Component {
 
 const styles = StyleSheet.create({
   SwiperwrapperStyle: {
-    //paddingHorizontal: scale(55),
     width: scale(1080),
     height: verticalScale(675),
   },
@@ -178,17 +195,12 @@ const styles = StyleSheet.create({
     width: verticalScale(18),
     height: verticalScale(18),
     borderRadius: verticalScale(9),
-    //marginRight: scale(10),
-    //width: scale(20),
-    //height: scale(20),
-    //borderRadius: scale(10)
   },
   swiperActiveDotStyle: {
     marginBottom: -verticalScale(30),
     width: verticalScale(26),
     height: verticalScale(26),
     borderRadius: verticalScale(13),
-    //marginRight: scale(10),
   },
   SwiperImageStyle: {
     width: scale(1080),
@@ -196,12 +208,13 @@ const styles = StyleSheet.create({
   },
   rowDateView: {
     flexDirection: 'row',
+    width: width * 0.9,
     paddingVertical: verticalScale(10),
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
   },
   dateTextStyle: {
-    fontSize: moderateScale(55),
-    fontWeight: 'bold',
+    fontSize: moderateScale(60),
     color: '#B9BED1',
     fontFamily: 'Cairo-SemiBold',
   },
@@ -213,7 +226,6 @@ const styles = StyleSheet.create({
   trainerImageStyle: {
     width: scale(84.38),
     height: verticalScale(84.38),
-    marginHorizontal: scale(22),
   },
   backImageStyle: {
     width: scale(51),
@@ -232,7 +244,7 @@ const styles = StyleSheet.create({
     width: scale(1080),
     height: verticalScale(2),
     backgroundColor: '#E3E8F0',
-    marginVertical:verticalScale(22)
+    marginVertical: verticalScale(22),
   },
   buttonViewStyle: {
     position: 'absolute',
@@ -252,37 +264,52 @@ const styles = StyleSheet.create({
     height: verticalScale(54),
   },
   swiperContainerStyle: {
-    // position: 'absolute',
-    // top: 20,
-    // zIndex: 2222,
-    // flexDirection: 'row',
     width: scale(1080),
     height: verticalScale(675),
   },
   containerViewStyle: {
-    width: width * 0.9,
-    alignItems: 'flex-end',
+    alignItems: 'center',
     paddingBottom: verticalScale(222),
   },
   interestViewStyle: {
-    fontSize: moderateScale(55),
+    fontSize: moderateScale(66),
     color: '#B9BED1',
-    paddingVertical:verticalScale(22)
+    width: width * 0.9,
+    paddingVertical: verticalScale(22),
+    textAlign: 'right',
   },
   descriptionTextStyle: {
     textAlign: 'right',
     color: '#B9BED1',
     fontSize: moderateScale(55),
+    width: width * 0.9,
   },
   titleTextStyle: {
     fontSize: moderateScale(66),
     color: '#9EA3B8',
+    width: width * 0.9,
+    textAlign: 'right',
   },
-  trainerNameTextStyle:{
+  trainerNameTextStyle: {
+    fontSize: moderateScale(66),
+    width: width * 0.9,
+    color: '#B9BED1',
+    marginHorizontal: scale(20),
+    textAlign: 'right',
+  },
+  bookingTextStyle: {
+    fontSize: moderateScale(50),
+    color: '#B9BED1',
+    width: scale(800),
+    textAlign: 'right',
+  },
+  priceTextStyle: {
     fontSize: moderateScale(55),
     color: '#B9BED1',
-    fontWeight:'bold'
-  }
+    marginHorizontal: scale(20),
+    textAlign: 'left',
+    width: scale(150),
+  },
 });
 
 const mapStateToProps = ({training}) => {

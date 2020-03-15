@@ -3,8 +3,6 @@ import {  createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import Training from '../pages/training';
 
-import strings from '../strings';
-
 const AppNavigator = createStackNavigator({
     Training: {
         screen: Training,
